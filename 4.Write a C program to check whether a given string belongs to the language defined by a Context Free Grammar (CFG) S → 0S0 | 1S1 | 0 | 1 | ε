@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to check if a given string belongs to the CFG language
+int isCFGString(char* str, int start, int end) {
+    if (start > end) {
+        return 1; // Empty string is accepted
+    }
+
+    // Base case: single terminal '0' or '1'
+    if (start == end) {
+        return (str[start] == '0' || str[start] == '1');
+    }
+
+    // Check if the string is in the form of '0S0' or '1S1'
+    if ((str[start] == '0' && str[end] == '0') || (str[start] == '1' && str[end] == '1')) {
+        return isCFGString(str, start + 1, end - 1);
+    }
+
+    // Check if the string is in the form of '0S' or '1S'
+    if ((str[start] == '0' || str[start] == '1') && str[end] == 'S') {
+        int i;
+        for (i = start + 1; i < end; i++) {
+            if (!isCFGString(str, start + 1, i) || !isCFGString(str, i + 1, end - 1)) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    return 0; // String does not belong to the CFG language
+}
+
+int main() {
+    char str[100];
+    printf("Enter a string to check if it belongs to the CFG language:\n");
+    scanf("%s", str);
+
+    int length = strlen(str);
+    if (isCFGString(str, 0, length - 1)) {
+        printf("The string belongs to the CFG language.\n");
+    } else {
+        printf("The string does not belong to the CFG language.\n");
+    }
+
+    return 0;
+}
