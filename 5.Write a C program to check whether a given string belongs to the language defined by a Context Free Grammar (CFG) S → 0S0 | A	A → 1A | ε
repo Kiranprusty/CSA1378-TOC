@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Function to parse the string using the CFG rules
+bool parseString(const char *str, int *index);
+
+// Function to parse non-terminal A
+bool parseA(const char *str, int *index);
+
+// Function to parse non-terminal S
+bool parseS(const char *str, int *index);
+
+int main() {
+    char str[100];
+    int index = 0;
+
+    printf("Enter the string to check: ");
+    scanf("%s", str);
+
+    if (parseString(str, &index) && index == strlen(str)) {
+        printf("The string belongs to the language defined by the CFG.\n");
+    } else {
+        printf("The string does NOT belong to the language defined by the CFG.\n");
+    }
+
+    return 0;
+}
+
+// Function to parse the string using the CFG rules
+bool parseString(const char *str, int *index) {
+    return parseS(str, index);
+}
+
+// Function to parse non-terminal A
+bool parseA(const char *str, int *index) {
+    if (str[*index] == '1') {
+        (*index)++;
+        return parseA(str, index);
+    }
+    return true; // A can also be ε (empty string)
+}
+
+// Function to parse non-terminal S
+bool parseS(const char *str, int *index) {
+    int temp = *index;
+    if (str[*index] == '0') {
+        (*index)++;
+        if (parseS(str, index) && str[*index] == '0') {
+            (*index)++;
+            return true;
+        }
+    }
+    *index = temp; // Backtrack if the first branch fails
+    if (parseA(str, index))
+        return true;
+    return false;
+}
