@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+bool isCFG_S(char* str);
+bool isCFG_A(char* str);
+
+int main() {
+    char input[100];
+
+    printf("Enter a string: ");
+    scanf("%s", input);
+
+    if (isCFG_S(input))
+        printf("The string belongs to the language defined by the CFG.\n");
+    else
+        printf("The string does not belong to the language defined by the CFG.\n");
+
+    return 0;
+}
+
+bool isCFG_S(char* str) {
+    // Check if the string is empty (ε)
+    if (strlen(str) == 0)
+        return true;
+
+    // Find the position of "101" in the string
+    char* pos_101 = strstr(str, "101");
+
+    // Check if "101" exists in the string and if the remaining parts are valid
+    if (pos_101 != NULL && isCFG_A(str) && isCFG_A(pos_101 + 3))
+        return true;
+
+    return false;
+}
+
+bool isCFG_A(char* str) {
+    // Base case: an empty string is valid in this CFG
+    if (strlen(str) == 0)
+        return true;
+
+    // Check if the first character is '0' or '1'
+    if (str[0] == '0' || str[0] == '1') {
+        // Remove the first character from the string and make a recursive call
+        return isCFG_A(str + 1);
+    }
+
+    return false;
+}
