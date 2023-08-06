@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+bool isCFG(char* str);
+
+int main() {
+    char input[100];
+
+    printf("Enter a string: ");
+    scanf("%s", input);
+
+    if (isCFG(input))
+        printf("The string belongs to the language defined by the CFG.\n");
+    else
+        printf("The string does not belong to the language defined by the CFG.\n");
+
+    return 0;
+}
+
+bool isCFG(char* str) {
+    int len = strlen(str);
+
+    // Base case: an empty string is valid in this CFG
+    if (len == 0)
+        return true;
+
+    // Check for the first character being '0' and the last character being '1'
+    if (str[0] == '0' && str[len - 1] == '1') {
+        // Remove the first and last characters from the string
+        str[len - 1] = '\0';
+        str++;
+
+        // Recursive call for the remaining string
+        return isCFG(str);
+    }
+
+    return false;
+}
