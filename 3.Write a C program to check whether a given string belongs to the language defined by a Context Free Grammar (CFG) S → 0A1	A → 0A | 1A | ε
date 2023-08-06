@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Function to check if the given string belongs to the language defined by CFG
+bool belongsToLanguage(char* str);
+
+// Function to check if a string belongs to the language defined by A
+bool belongsToA(char* str);
+
+int main() {
+    char str[100];
+    printf("Enter a string to check if it belongs to the CFG language: ");
+    scanf("%s", str);
+
+    if (belongsToLanguage(str)) {
+        printf("The string belongs to the language defined by the CFG.\n");
+    } else {
+        printf("The string does NOT belong to the language defined by the CFG.\n");
+    }
+
+    return 0;
+}
+
+bool belongsToLanguage(char* str) {
+    // Start checking from the non-terminal S
+    return belongsToA(str + 1) && str[0] == '0' && str[strlen(str) - 1] == '1';
+}
+
+bool belongsToA(char* str) {
+    if (strlen(str) == 0) {
+        // If the string is empty, it belongs to A (using ε production)
+        return true;
+    } else if (str[0] == '0') {
+        // Apply production A → 0A
+        return belongsToA(str + 1);
+    } else if (str[0] == '1') {
+        // Apply production A → 1A
+        return belongsToA(str + 1);
+    } else {
+        // If the character is neither 0 nor 1, it does not belong to A
+        return false;
+    }
+}
